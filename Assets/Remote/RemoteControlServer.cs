@@ -8,7 +8,9 @@ using UnityEngine;
 
 public class RemoteControlServer : MonoBehaviour
 {
-    public int port = 8080;
+    [Header("HTTP")]
+    [Tooltip("Default 18080 to avoid common Windows conflicts with 8080.")]
+    public int port = 18080;
 
     private HttpListener _listener;
     private Thread _thread;
@@ -18,6 +20,7 @@ public class RemoteControlServer : MonoBehaviour
     private readonly ConcurrentQueue<Action> _mainThread = new ConcurrentQueue<Action>();
 
     void Start() => StartServer();
+
     void OnDestroy() => StopServer();
 
     void Update()
@@ -31,16 +34,23 @@ public class RemoteControlServer : MonoBehaviour
 
     public void StartServer()
     {
-        if (_running) return;
+        // Prevent double-starts when toggling Play
+        StopServer();
 
         _listener = new HttpListener();
         _listener.Prefixes.Add($"http://+:{port}/");
 
-        try { _listener.Start(); }
+        try
+        {
+            _listener.Start();
+        }
         catch (Exception e)
         {
             Debug.LogError($"RemoteControlServer failed to start: {e}");
-            Debug.LogError($"On Windows you may need: netsh http add urlacl url=http://+:{port}/ user=Everyone");
+            Debug.LogError($"If on Windows, you may need URLACL:\nnetsh http add urlacl url=http://+:{port}/ user=Everyone");
+            try { _listener.Close(); } catch { }
+            _listener = null;
+            _running = false;
             return;
         }
 
@@ -54,8 +64,10 @@ public class RemoteControlServer : MonoBehaviour
     public void StopServer()
     {
         _running = false;
+
         try { _listener?.Stop(); } catch { }
         try { _listener?.Close(); } catch { }
+
         _listener = null;
         _thread = null;
     }
@@ -94,9 +106,27 @@ public class RemoteControlServer : MonoBehaviour
     {
         var path = ctx.Request.Url.AbsolutePath ?? "/";
 
-        if (path == "/health")
+        // GET /health
+        if (path == "/health" && ctx.Request.HttpMethod == "GET")
         {
             WriteJson(ctx, 200, "{\"ok\":true}");
+            return;
+        }
+
+        // GET /clear (added to avoid Windows POST 411 Length Required)
+        if (path == "/clear" && ctx.Request.HttpMethod == "GET")
+        {
+            EnqueueClear();
+            WriteJson(ctx, 200, "{\"ok\":true,\"queued\":true}");
+            return;
+        }
+
+        // POST /clear
+        if (path == "/clear" && ctx.Request.HttpMethod == "POST")
+        {
+            // We ignore the body entirely.
+            EnqueueClear();
+            WriteJson(ctx, 200, "{\"ok\":true,\"queued\":true}");
             return;
         }
 
@@ -150,25 +180,21 @@ public class RemoteControlServer : MonoBehaviour
             return;
         }
 
-        // POST /clear  -> destroys cubes named like "420" or "420_1"
-        if (path == "/clear" && ctx.Request.HttpMethod == "POST")
-        {
-            _mainThread.Enqueue(() =>
-            {
-                var all = FindObjectsOfType<GameObject>();
-                foreach (var go in all)
-                {
-                    if (go == null) continue;
-                    if (IsSpawnedIdCubeName(go.name))
-                        Destroy(go);
-                }
-            });
-
-            WriteJson(ctx, 200, "{\"ok\":true,\"queued\":true}");
-            return;
-        }
-
         WriteJson(ctx, 404, "{\"ok\":false,\"error\":\"unknown route\"}");
+    }
+
+    private void EnqueueClear()
+    {
+        _mainThread.Enqueue(() =>
+        {
+            var all = FindObjectsOfType<GameObject>(true);
+            foreach (var go in all)
+            {
+                if (go == null) continue;
+                if (IsSpawnedIdCubeName(go.name))
+                    Destroy(go);
+            }
+        });
     }
 
     private void SpawnCubeNamedId(int id, Vector3 pos)
