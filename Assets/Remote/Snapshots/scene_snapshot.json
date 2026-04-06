@@ -1,0 +1,139 @@
+{
+    "createdUtc": "2026-04-06T14:20:50.6213512Z",
+    "unityVersion": "2022.3.62f3",
+    "activeScene": "SampleScene",
+    "objects": [
+        {
+            "name": "SnapshotSaver",
+            "path": "SnapshotSaver",
+            "tag": "Untagged",
+            "layer": 0,
+            "activeSelf": true,
+            "activeInHierarchy": true,
+            "position": {
+                "x": -1.3016386032104493,
+                "y": 0.48710060119628909,
+                "z": 1.0829696655273438
+            },
+            "rotationEuler": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "localPosition": {
+                "x": -1.3016386032104493,
+                "y": 0.48710060119628909,
+                "z": 1.0829696655273438
+            },
+            "localRotationEuler": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "localScale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            }
+        },
+        {
+            "name": "RemoteControl",
+            "path": "RemoteControl",
+            "tag": "Untagged",
+            "layer": 0,
+            "activeSelf": true,
+            "activeInHierarchy": true,
+            "position": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "rotationEuler": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "localPosition": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "localRotationEuler": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "localScale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            }
+        },
+        {
+            "name": "Directional Light",
+            "path": "Directional Light",
+            "tag": "Untagged",
+            "layer": 0,
+            "activeSelf": true,
+            "activeInHierarchy": true,
+            "position": {
+                "x": 0.0,
+                "y": 3.0,
+                "z": 0.0
+            },
+            "rotationEuler": {
+                "x": 50.0,
+                "y": 330.0,
+                "z": 0.0
+            },
+            "localPosition": {
+                "x": 0.0,
+                "y": 3.0,
+                "z": 0.0
+            },
+            "localRotationEuler": {
+                "x": 50.0,
+                "y": 330.0,
+                "z": 0.0
+            },
+            "localScale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            }
+        },
+        {
+            "name": "Main Camera",
+            "path": "Main Camera",
+            "tag": "MainCamera",
+            "layer": 0,
+            "activeSelf": true,
+            "activeInHierarchy": true,
+            "position": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": -10.0
+            },
+            "rotationEuler": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "localPosition": {
+                "x": 0.0,
+                "y": 1.0,
+                "z": -10.0
+            },
+            "localRotationEuler": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "localScale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            }
+        }
+    ]
+}
